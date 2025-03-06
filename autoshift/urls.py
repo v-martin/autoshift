@@ -1,4 +1,4 @@
-"""
+'''
 URL configuration for 123 project.
 
 The `urlpatterns` list routes URLs to views. For more information please see:
@@ -13,10 +13,29 @@ Class-based views
 Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
-"""
+'''
+from django.conf import settings
 from django.contrib import admin
 from django.urls import path
+from django.urls.conf import include
+from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
+
+
+api_urlpatterns = [
+    path('auth/', include('user.urls')),
+]
 
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('api/', include((api_urlpatterns, 'api'))),
 ]
+
+if settings.DEBUG or settings.ENVIRONMENT == 'development':
+    urlpatterns += [
+        path('api-docs/schema/', SpectacularAPIView.as_view(), name='schema'),
+        path(
+            'api-docs/',
+            SpectacularSwaggerView.as_view(url_name='schema'),
+            name='swagger-ui',
+        ),
+    ]

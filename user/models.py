@@ -8,6 +8,19 @@ from django.db import models
 
 
 class User(AbstractBaseUser, PermissionsMixin):
+    WORKER = 'worker'
+    ADMIN = 'admin'
+    ROLE_CHOICES = [
+        (WORKER, 'Worker'),
+        (ADMIN, 'Admin'),
+    ]
+
+    role = models.CharField(
+        max_length=10,
+        choices=ROLE_CHOICES,
+        default=WORKER,
+    )
+
     uuid = models.UUIDField(
         default=uuid.uuid4,
         unique=True,
@@ -49,3 +62,6 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         verbose_name='user permissions',
     )
+    USERNAME_FIELD = "email"
+    EMAIL_FIELD = "email"
+    REQUIRED_FIELDS = []
