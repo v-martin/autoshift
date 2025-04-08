@@ -23,6 +23,8 @@ from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 api_urlpatterns = [
     path('auth/', include('user.urls')),
+    path('', include('shifts.urls')),
+    path('', include('warehouses.urls')),
 ]
 
 urlpatterns = [

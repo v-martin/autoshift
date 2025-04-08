@@ -2,7 +2,7 @@ import uuid
 
 from django.conf import settings
 from django.contrib.auth.base_user import AbstractBaseUser
-from django.contrib.auth.models import PermissionsMixin, Group, Permission
+from django.contrib.auth.models import PermissionsMixin, Group, Permission, UserManager
 from django.core.validators import FileExtensionValidator
 from django.db import models
 
@@ -25,6 +25,9 @@ class User(AbstractBaseUser, PermissionsMixin):
         default=uuid.uuid4,
         unique=True,
         editable=False,
+    )
+    username = models.CharField(
+        unique=True,
     )
     first_name = models.CharField(
         max_length=150,
@@ -62,6 +65,16 @@ class User(AbstractBaseUser, PermissionsMixin):
         blank=True,
         verbose_name='user permissions',
     )
+    is_admin_requested = models.BooleanField(
+        default=False,
+        help_text="Designates whether the user has requested an admin role.",
+    )
+    is_staff = models.BooleanField(
+        default=False,
+    )
+
     USERNAME_FIELD = "email"
     EMAIL_FIELD = "email"
     REQUIRED_FIELDS = []
+
+    objects = UserManager()
