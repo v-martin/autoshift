@@ -58,6 +58,10 @@ class SignUpRequestSerializer(serializers.ModelSerializer):
         write_only=True,
         required=True,
     )
+    avatar = serializers.ImageField(required=False)
+    first_name = serializers.CharField(required=False, max_length=150)
+    last_name = serializers.CharField(required=False, max_length=150)
+    phone_number = serializers.CharField(required=False, max_length=150)
 
     class Meta:
         model = User
@@ -67,6 +71,10 @@ class SignUpRequestSerializer(serializers.ModelSerializer):
             'password',
             'password2',
             'role',
+            'avatar',
+            'first_name',
+            'last_name',
+            'phone_number',
         )
 
     def validate(self, attrs):
@@ -76,12 +84,16 @@ class SignUpRequestSerializer(serializers.ModelSerializer):
         return attrs
 
     def create(self, validated_data):
+        validated_data.pop('password2')
+        role = validated_data.pop('role', User.WORKER)
+        
         user = User.objects.create_user(
-            username=validated_data['username'],
-            email=validated_data['email'],
-            password=validated_data['password'],
+            username=validated_data.pop('username'),
+            email=validated_data.pop('email'),
+            password=validated_data.pop('password'),
             role=User.WORKER,
-            is_admin_requested=(validated_data['role'] == User.ADMIN),
+            is_admin_requested=(role == User.ADMIN),
+            **validated_data
         )
 
         return user
