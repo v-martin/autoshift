@@ -10,7 +10,6 @@ from warehouses.serializers import (
     WarehouseUpdateSerializer, 
     WarehouseResponseSerializer,
 )
-from warehouses.service import WarehouseService
 
 
 @extend_schema(
@@ -20,7 +19,6 @@ class WarehouseViewSet(viewsets.ModelViewSet):
     queryset = Warehouse.objects.all()
     serializer_class = WarehouseSerializer
     lookup_field = 'uuid'
-    service = WarehouseService
 
     def get_permissions(self):
         if self.action in ['create', 'update', 'partial_update', 'destroy']:

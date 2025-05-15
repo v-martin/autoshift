@@ -1,0 +1,83 @@
+syntax = "proto3";
+
+package shift_optimizer;
+
+enum QualificationType {
+  BASIC_WORKER = 0;
+  CARGO_DRIVER = 1;
+  ENGINEER = 2;
+}
+
+message Worker {
+  string uuid = 1;
+  string username = 2;
+  repeated Qualification qualifications = 3;
+  repeated WarehousePreference warehouse_preferences = 4;
+}
+
+message Qualification {
+  QualificationType type = 1;
+  int32 level = 2;
+}
+
+message WarehousePreference {
+  string warehouse_uuid = 1;
+  int32 priority = 2;
+  float distance = 3;
+}
+
+message Warehouse {
+  string uuid = 1;
+  string name = 2;
+  int32 capacity = 3;
+  int32 min_workers = 4;
+  int32 min_basic_workers = 5;
+  int32 min_drivers = 6;
+  int32 min_engineers = 7;
+  bool is_active = 8;
+}
+
+message CargoLoad {
+  string warehouse_uuid = 1;
+  string date = 2;
+  int32 total_weight = 3;
+}
+
+message OptimizeShiftsRequest {
+  repeated Worker workers = 1;
+  repeated Warehouse warehouses = 2;
+  repeated CargoLoad cargo_loads = 3;
+  repeated string days = 4;
+}
+
+message ScheduledShift {
+  string worker_uuid = 1;
+  string warehouse_uuid = 2;
+  string day_of_week = 3;
+  string start_time = 4;
+  string end_time = 5;
+}
+
+message OptimizeShiftsResponse {
+  repeated ScheduledShift shifts = 1;
+  repeated WarehouseStaffing warehouse_staffing = 2;
+  bool success = 3;
+  string message = 4;
+}
+
+message WarehouseStaffing {
+  string warehouse_uuid = 1;
+  string warehouse_name = 2;
+  string day = 3;
+  int32 required_basic_workers = 4;
+  int32 scheduled_basic_workers = 5;
+  int32 required_drivers = 6;
+  int32 scheduled_drivers = 7;
+  int32 required_engineers = 8;
+  int32 scheduled_engineers = 9;
+  bool is_fully_staffed = 10;
+}
+
+service ShiftOptimizerService {
+  rpc OptimizeShifts(OptimizeShiftsRequest) returns (OptimizeShiftsResponse) {}
+}

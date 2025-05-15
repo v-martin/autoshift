@@ -1,0 +1,98 @@
+{% extends "admin/base_site.html" %}
+{% load i18n admin_urls static %}
+
+{% block extrastyle %}
+  {{ block.super }}
+  <style>
+    .optimize-form {
+      max-width: 600px;
+      margin: 20px auto;
+      padding: 20px;
+      background-color: #f8f8f8;
+      border-radius: 5px;
+      box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    }
+    
+    .optimize-form h2 {
+      margin-top: 0;
+      border-bottom: 1px solid #ddd;
+      padding-bottom: 10px;
+    }
+    
+    .form-row {
+      margin-bottom: 20px;
+    }
+    
+    .form-row label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    
+    .form-row input {
+      width: 100%;
+      padding: 8px;
+      border: 1px solid #ddd;
+      border-radius: 3px;
+    }
+    
+    .optimize-button {
+      background-color: #79aec8;
+      color: white;
+      border: none;
+      padding: 10px 15px;
+      border-radius: 3px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    
+    .optimize-button:hover {
+      background-color: #609ab6;
+    }
+    
+    .helptext {
+      display: block;
+      font-size: 13px;
+      color: #666;
+      margin-top: 5px;
+    }
+  </style>
+{% endblock %}
+
+{% block breadcrumbs %}
+<div class="breadcrumbs">
+  <a href="{% url 'admin:index' %}">{% trans 'Home' %}</a>
+  &rsaquo; <a href="{% url 'admin:app_list' app_label=opts.app_label %}">{{ opts.app_config.verbose_name }}</a>
+  &rsaquo; <a href="{% url 'admin:shifts_shift_changelist' %}">{{ opts.verbose_name_plural|capfirst }}</a>
+  &rsaquo; {% trans 'Оптимизация смен' %}
+</div>
+{% endblock %}
+
+{% block content %}
+<div class="optimize-form">
+  <h2>{% trans 'Оптимизация смен' %}</h2>
+  
+  <p>Используйте форму ниже для запуска автоматической оптимизации смен работников на складах. 
+     Оптимизация учитывает квалификации работников, предпочтения по складам и грузооборот.</p>
+  
+  <form method="post">
+    {% csrf_token %}
+    
+    <div class="form-row">
+      <label for="id_start_date">Начальная дата:</label>
+      {{ form.start_date }}
+      <span class="helptext">Дата начала периода оптимизации.</span>
+    </div>
+    
+    <div class="form-row">
+      <label for="id_end_date">Конечная дата:</label>
+      {{ form.end_date }}
+      <span class="helptext">Дата окончания периода оптимизации. Если не указана, используется начальная дата.</span>
+    </div>
+    
+    <div class="form-row">
+      <button type="submit" class="optimize-button">{% trans 'Оптимизировать смены' %}</button>
+    </div>
+  </form>
+</div>
+{% endblock %} 

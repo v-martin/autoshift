@@ -12,6 +12,9 @@ class WarehouseSerializer(serializers.ModelSerializer):
             'address',
             'capacity',
             'min_workers',
+            'min_basic_workers',
+            'min_drivers',
+            'min_engineers',
             'is_active',
             'created_at',
             'updated_at',
@@ -32,6 +35,9 @@ class WarehouseCreateSerializer(serializers.ModelSerializer):
             'address',
             'capacity',
             'min_workers',
+            'min_basic_workers',
+            'min_drivers',
+            'min_engineers',
             'is_active',
         )
 
@@ -44,6 +50,9 @@ class WarehouseUpdateSerializer(serializers.ModelSerializer):
             'address',
             'capacity',
             'min_workers',
+            'min_basic_workers',
+            'min_drivers',
+            'min_engineers',
             'is_active',
         )
         extra_kwargs = {
@@ -51,6 +60,9 @@ class WarehouseUpdateSerializer(serializers.ModelSerializer):
             'address': {'required': False},
             'capacity': {'required': False},
             'min_workers': {'required': False},
+            'min_basic_workers': {'required': False},
+            'min_drivers': {'required': False},
+            'min_engineers': {'required': False},
             'is_active': {'required': False},
         }
 
@@ -65,6 +77,9 @@ class WarehouseResponseSerializer(serializers.ModelSerializer):
             'address',
             'capacity',
             'min_workers',
+            'min_basic_workers',
+            'min_drivers',
+            'min_engineers',
             'is_active',
             'created_at',
             'updated_at',

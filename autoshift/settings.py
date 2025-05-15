@@ -24,10 +24,14 @@ INSTALLED_APPS = [
     'rest_framework_simplejwt',
     'drf_spectacular',
     'django_filters',
+    'grpc',
+    'grpc_tools',
 
     'user',
     'shifts',
     'warehouses',
+    'cargo',
+    'shift_optimizer',
 ]
 
 MIDDLEWARE = [
@@ -152,3 +156,7 @@ ALLOWED_IMAGE_EXTENSIONS = [
     'jpg',
     'png',
 ]
+
+# Shift Optimizer Settings
+SHIFT_OPTIMIZER_HOST = config('SHIFT_OPTIMIZER_HOST', default='shift_optimizer')
+SHIFT_OPTIMIZER_PORT = config('SHIFT_OPTIMIZER_PORT', default='50051')

@@ -26,6 +26,7 @@ api_urlpatterns = [
     path('auth/', include('user.urls')),
     path('', include('shifts.urls')),
     path('', include('warehouses.urls')),
+    path('cargo/', include('cargo.urls')),
 ]
 
 urlpatterns = [

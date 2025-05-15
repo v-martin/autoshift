@@ -13,6 +13,29 @@ services:
     networks:
       - app_network
 
+  shift_optimizer:
+    build:
+      context: ./shift_optimizer
+      dockerfile: Dockerfile
+    container_name: shift_optimizer
+    command: python -m shift_optimizer server
+    volumes:
+      - .:/app
+    environment:
+      - PYTHONPATH=/app
+      - PYTHONUNBUFFERED=1
+      - DEBUG=1
+    ports:
+      - "50051:50051"
+    networks:
+      - app_network
+    healthcheck:
+      test: ["CMD", "python", "-c", "import socket; s = socket.socket(socket.AF_INET, socket.SOCK_STREAM); s.connect(('127.0.0.1', 50051)); s.close()"]
+      interval: 10s
+      timeout: 5s
+      retries: 3
+      start_period: 5s
+
   app:
     build: .
     container_name: autoshift
@@ -22,12 +45,16 @@ services:
     ports:
       - "8000:8000"
     depends_on:
-      - db
-      - minio
+      db:
+        condition: service_started
+      shift_optimizer:
+        condition: service_healthy
     env_file:
       - .env
     networks:
       - app_network
+    extra_hosts:
+      - "host.docker.internal:host-gateway"
 
 volumes:
   postgres_data:

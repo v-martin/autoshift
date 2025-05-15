@@ -20,6 +20,18 @@ class Warehouse(models.Model):
         help_text="Minimum number of workers required in the warehouse",
         default=0,
     )
+    min_basic_workers = models.PositiveIntegerField(
+        help_text="Minimum number of basic workers required in the warehouse",
+        default=0,
+    )
+    min_drivers = models.PositiveIntegerField(
+        help_text="Minimum number of cargo drivers required in the warehouse",
+        default=0,
+    )
+    min_engineers = models.PositiveIntegerField(
+        help_text="Minimum number of engineers required in the warehouse",
+        default=0,
+    )
     is_active = models.BooleanField(
         default=True,
     )

@@ -43,6 +43,10 @@ class Shift(models.Model):
         on_delete=models.CASCADE,
         related_name='shifts',
     )
+    is_optimized = models.BooleanField(
+        default=False,
+        help_text="Флаг, указывающий, что смена была создана автоматически через оптимизацию"
+    )
     created_at = models.DateTimeField(auto_now_add=True)
     updated_at = models.DateTimeField(auto_now=True)
     
