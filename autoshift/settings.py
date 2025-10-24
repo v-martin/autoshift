@@ -116,11 +116,19 @@ USE_TZ = True
 
 
 # Static files (CSS, JavaScript, Images)
-STATIC_URL = 'static/'
+STATIC_URL = '/static/'
+STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
+STATICFILES_DIRS = [
+    os.path.join(BASE_DIR, 'static'),
+]
 
 # Media files (User uploads)
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
+
+# Login redirect
+LOGIN_URL = '/admin/login/'
+LOGIN_REDIRECT_URL = '/dashboard/'
 
 AUTH_USER_MODEL = 'user.User'
 

@@ -1,0 +1,81 @@
+<svg width="900" height="400" xmlns="http://www.w3.org/2000/svg">
+  <defs>
+    <style>
+      .title { font: bold 24px Arial; text-anchor: middle; fill: #333; }
+      .component { font: 16px Arial; text-anchor: middle; fill: white; font-weight: bold; }
+      .port { font: 12px Arial; text-anchor: middle; fill: white; }
+      .arrow { stroke: #333; stroke-width: 3; fill: none; marker-end: url(#arrowhead); }
+      .connection-label { font: 14px Arial; text-anchor: middle; fill: #333; font-weight: bold; }
+      .docker-label { font: 18px Arial; text-anchor: middle; fill: #0066cc; font-weight: bold; }
+    </style>
+    <marker id="arrowhead" markerWidth="12" markerHeight="8" refX="10" refY="4" orient="auto">
+      <polygon points="0 0, 12 4, 0 8" fill="#333" />
+    </marker>
+  </defs>
+  
+  <!-- Background -->
+  <rect width="900" height="400" fill="#ffffff" stroke="#333" stroke-width="2" rx="10"/>
+  
+  <!-- Title -->
+  <text x="450" y="35" class="title">Архитектура сервисов AutoShift</text>
+  
+  <!-- Docker Environment Container -->
+  <rect x="100" y="70" width="700" height="280" fill="none" stroke="#0066cc" stroke-width="4" stroke-dasharray="15,10" rx="20"/>
+  <text x="450" y="95" class="docker-label">🐳 Docker Environment</text>
+  
+  <!-- Users -->
+  <rect x="50" y="180" width="80" height="80" fill="#607d8b" stroke="#455a64" stroke-width="3" rx="10"/>
+  <text x="90" y="210" class="component">👤</text>
+  <text x="90" y="230" class="component">Users</text>
+  
+  <!-- Nginx (API Gateway) -->
+  <rect x="180" y="150" width="120" height="100" fill="#ff9800" stroke="#f57c00" stroke-width="4" rx="10"/>
+  <text x="240" y="180" class="component">🌐 Nginx</text>
+  <text x="240" y="200" class="component" style="font-size: 14px;">Gateway</text>
+  <text x="240" y="220" class="port">:80/443</text>
+  
+  <!-- Django Application -->
+  <rect x="350" y="150" width="120" height="100" fill="#2196f3" stroke="#1976d2" stroke-width="4" rx="10"/>
+  <text x="410" y="180" class="component">🐍 Django</text>
+  <text x="410" y="200" class="component" style="font-size: 14px;">API</text>
+  <text x="410" y="220" class="port">:8000</text>
+  
+  <!-- Shift Optimizer -->
+  <rect x="520" y="150" width="120" height="100" fill="#4caf50" stroke="#388e3c" stroke-width="4" rx="10"/>
+  <text x="580" y="175" class="component" style="font-size: 14px;">⚙️ Optimizer</text>
+  <text x="580" y="195" class="component" style="font-size: 14px;">gRPC</text>
+  <text x="580" y="215" class="port">:50051</text>
+  
+  <!-- PostgreSQL Database -->
+  <ellipse cx="580" cy="310" rx="60" ry="35" fill="#9c27b0" stroke="#7b1fa2" stroke-width="4"/>
+  <text x="580" y="300" class="component">🐘</text>
+  <text x="580" y="320" class="component" style="font-size: 14px;">PostgreSQL</text>
+  <text x="580" y="335" class="port">:5432</text>
+  
+  <!-- Arrows and connections -->
+  
+  <!-- Users to Nginx -->
+  <line x1="130" y1="200" x2="180" y2="200" class="arrow"/>
+  <text x="155" y="190" class="connection-label">HTTP</text>
+  
+  <!-- Nginx to Django -->
+  <line x1="300" y1="200" x2="350" y2="200" class="arrow"/>
+  <text x="325" y="190" class="connection-label">Proxy</text>
+  
+  <!-- Django to Optimizer -->
+  <line x1="470" y1="200" x2="520" y2="200" class="arrow"/>
+  <text x="495" y="190" class="connection-label">gRPC</text>
+  
+  <!-- Django to PostgreSQL -->
+  <line x1="430" y1="250" x2="550" y2="290" class="arrow"/>
+  <text x="480" y="280" class="connection-label">SQL</text>
+  
+  <!-- Optimizer to PostgreSQL -->
+  <line x1="580" y1="250" x2="580" y2="275" class="arrow" stroke-dasharray="8,4"/>
+  <text x="620" y="265" class="connection-label" style="font-size: 12px;">Read</text>
+  
+  <!-- Flow indicators -->
+  <text x="450" y="380" style="font: 14px Arial; text-anchor: middle; fill: #666; font-style: italic;">
+    Поток данных: Users → Nginx → Django → gRPC/SQL → Optimizer/Database
+  </text>
+</svg> 

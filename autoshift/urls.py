@@ -19,17 +19,20 @@ from django.conf.urls.static import static
 from django.contrib import admin
 from django.urls import path
 from django.urls.conf import include
+from django.views.generic import RedirectView
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 
 api_urlpatterns = [
     path('auth/', include('user.urls')),
-    path('', include('shifts.urls')),
-    path('', include('warehouses.urls')),
+    path('shifts/', include('shifts.urls')),
+    path('warehouses/', include('warehouses.urls')),
     path('cargo/', include('cargo.urls')),
 ]
 
 urlpatterns = [
+    path('', RedirectView.as_view(pattern_name='shifts_dashboard'), name='home'),
+    path('', include('shifts.urls')),
     path('admin/', admin.site.urls),
     path('api/', include((api_urlpatterns, 'api'))),
 ]
@@ -44,3 +47,4 @@ if settings.DEBUG or settings.ENVIRONMENT == 'development':
         ),
     ]
     urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
+    urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

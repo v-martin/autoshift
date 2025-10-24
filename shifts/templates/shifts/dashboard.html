@@ -1,0 +1,145 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>АвтоСмены - Панель управления</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'css/dashboard.css' %}">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
+        <div class="container">
+            <a class="navbar-brand" href="#">АвтоСмены</a>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <h1>Панель оптимизации смен</h1>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card" id="optimization-card">
+                    <div class="card-header d-flex justify-content-between align-items-center">
+                        <span>Статус оптимизации</span>
+                        <button id="runOptimization" class="btn btn-primary">Запустить оптимизацию</button>
+                    </div>
+                    <div class="card-body">
+                        <div class="alert alert-info" id="optimizationStatus">
+                            Текущее распределение персонала сбалансировано для сегодняшней нагрузки. Однако, на завтра прогнозируется высокий объем грузоперевозок.
+                        </div>
+                        <div id="optimizationResults" class="d-none">
+                            <h5>Результаты оптимизации</h5>
+                            <div class="comparison-container">
+                                <div class="row">
+                                    <div class="col-md-6">
+                                        <h6>До оптимизации</h6>
+                                        <div id="beforeOptimization"></div>
+                                    </div>
+                                    <div class="col-md-6">
+                                        <h6>После оптимизации</h6>
+                                        <div id="afterOptimization"></div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Распределение смен по неделе
+                    </div>
+                    <div class="card-body">
+                        <canvas id="weeklyShiftChart"></canvas>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Распределение персонала по складам
+                    </div>
+                    <div class="card-body">
+                        <canvas id="warehouseStaffChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Календарь смен
+                    </div>
+                    <div class="card-body">
+                        <div id="calendar"></div>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <div class="card">
+                    <div class="card-header">
+                        Прогноз грузоперевозок на 3 дня
+                    </div>
+                    <div class="card-body">
+                        <canvas id="cargoForecastChart"></canvas>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row mt-4">
+            <div class="col-12">
+                <div class="card">
+                    <div class="card-header">
+                        Текущие смены
+                    </div>
+                    <div class="card-body">
+                        <table class="table table-striped" id="shiftsTable">
+                            <thead>
+                                <tr>
+                                    <th>День</th>
+                                    <th>Сотрудник</th>
+                                    <th>Склад</th>
+                                    <th>Время начала</th>
+                                    <th>Время окончания</th>
+                                    <th>Оптимизирована</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for shift in shifts %}
+                                <tr>
+                                    <td>{{ shift.get_day_of_week_display }}</td>
+                                    <td>{{ shift.user.username }}</td>
+                                    <td>{{ shift.warehouse.name }}</td>
+                                    <td>{{ shift.start_time }}</td>
+                                    <td>{{ shift.end_time }}</td>
+                                    <td>
+                                        {% if shift.is_optimized %}
+                                        <span class="badge bg-success">Да</span>
+                                        {% else %}
+                                        <span class="badge bg-secondary">Нет</span>
+                                        {% endif %}
+                                    </td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="{% static 'js/dashboard.js' %}"></script>
+</body>
+</html> 

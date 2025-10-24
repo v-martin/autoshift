@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>API Test</title>
+    <style>
+        body {
+            font-family: sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        .result {
+            background: #f5f5f5;
+            padding: 20px;
+            border-radius: 5px;
+            margin-top: 20px;
+            white-space: pre-wrap;
+        }
+        button {
+            padding: 10px 15px;
+            background: #4CAF50;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body>
+    <h1>API Endpoint Test</h1>
+    
+    <div>
+        <h2>Test Statistics Endpoint</h2>
+        <button id="testStats">Test Statistics API</button>
+        <div id="statsResult" class="result">Results will appear here...</div>
+    </div>
+
+    <script>
+        document.getElementById('testStats').addEventListener('click', function() {
+            const resultDiv = document.getElementById('statsResult');
+            resultDiv.textContent = 'Fetching data...';
+            
+            // Try different URL patterns to see which one works
+            const urls = [
+                '/api/statistics/',
+                '/api/shifts/statistics/',
+                '/statistics/'
+            ];
+            
+            // Test all URLs
+            Promise.all(urls.map(url => 
+                fetch(url)
+                    .then(response => {
+                        if (!response.ok) {
+                            return { url, status: response.status, ok: false };
+                        }
+                        return response.json().then(data => ({ url, data, status: response.status, ok: true }));
+                    })
+                    .catch(error => ({ url, error: error.toString(), ok: false }))
+            ))
+            .then(results => {
+                let output = 'Test Results:\n\n';
+                
+                results.forEach(result => {
+                    output += `URL: ${result.url}\n`;
+                    output += `Status: ${result.status || 'Error'}\n`;
+                    output += `Success: ${result.ok ? 'Yes' : 'No'}\n`;
+                    
+                    if (result.data) {
+                        output += `Data: ${JSON.stringify(result.data, null, 2)}\n`;
+                    } else if (result.error) {
+                        output += `Error: ${result.error}\n`;
+                    }
+                    
+                    output += '\n---\n\n';
+                });
+                
+                resultDiv.textContent = output;
+            });
+        });
+    </script>
+</body>
+</html> 

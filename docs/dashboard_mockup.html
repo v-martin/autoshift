@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AutoShift Dashboard Mockup</title>
+    <style>
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f5f5f5;
+            margin: 0;
+            padding: 0;
+        }
+        .navbar {
+            background-color: #343a40;
+            color: white;
+            padding: 15px 20px;
+        }
+        .navbar-brand {
+            font-weight: bold;
+            font-size: 1.5rem;
+        }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+        }
+        .row {
+            display: flex;
+            flex-wrap: wrap;
+            margin: 0 -15px;
+        }
+        .col {
+            flex: 1;
+            padding: 0 15px;
+            min-width: 300px;
+            margin-bottom: 30px;
+        }
+        .card {
+            background-color: white;
+            border-radius: 5px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            overflow: hidden;
+        }
+        .card-header {
+            background-color: #f8f9fa;
+            padding: 15px 20px;
+            font-weight: bold;
+            border-bottom: 1px solid #dee2e6;
+        }
+        .card-body {
+            padding: 20px;
+        }
+        .chart {
+            height: 250px;
+            background-color: #e9ecef;
+            border-radius: 5px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: #6c757d;
+            font-style: italic;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+        th, td {
+            padding: 12px 15px;
+            text-align: left;
+            border-bottom: 1px solid #dee2e6;
+        }
+        thead {
+            background-color: #f8f9fa;
+        }
+        tr:nth-child(even) {
+            background-color: #f8f9fa;
+        }
+        .badge {
+            padding: 5px 10px;
+            border-radius: 30px;
+            font-size: 0.8rem;
+            font-weight: normal;
+            color: white;
+        }
+        .badge-success {
+            background-color: #28a745;
+        }
+        .badge-secondary {
+            background-color: #6c757d;
+        }
+    </style>
+</head>
+<body>
+    <nav class="navbar">
+        <div class="container">
+            <span class="navbar-brand">AutoShift</span>
+        </div>
+    </nav>
+
+    <div class="container">
+        <h1>Shift Optimization Dashboard</h1>
+        
+        <div class="row">
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">Weekly Shift Schedule</div>
+                    <div class="card-body">
+                        <div class="chart">[Weekly Shift Chart]</div>
+                    </div>
+                </div>
+            </div>
+            <div class="col">
+                <div class="card">
+                    <div class="card-header">Warehouse Staff Distribution</div>
+                    <div class="card-body">
+                        <div class="chart">[Warehouse Staff Chart]</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="row">
+            <div class="col" style="flex: 2">
+                <div class="card">
+                    <div class="card-header">Current Shifts</div>
+                    <div class="card-body">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Day</th>
+                                    <th>Employee</th>
+                                    <th>Warehouse</th>
+                                    <th>Start Time</th>
+                                    <th>End Time</th>
+                                    <th>Optimized</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <tr>
+                                    <td>Monday</td>
+                                    <td>Worker 1</td>
+                                    <td>North Warehouse</td>
+                                    <td>09:00</td>
+                                    <td>17:00</td>
+                                    <td><span class="badge badge-secondary">No</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Monday</td>
+                                    <td>Worker 2</td>
+                                    <td>South Warehouse</td>
+                                    <td>09:00</td>
+                                    <td>17:00</td>
+                                    <td><span class="badge badge-secondary">No</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Tuesday</td>
+                                    <td>Worker 1</td>
+                                    <td>South Warehouse</td>
+                                    <td>09:00</td>
+                                    <td>17:00</td>
+                                    <td><span class="badge badge-secondary">No</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Thursday</td>
+                                    <td>Worker 1</td>
+                                    <td>North Warehouse</td>
+                                    <td>09:00</td>
+                                    <td>17:00</td>
+                                    <td><span class="badge badge-success">Yes</span></td>
+                                </tr>
+                                <tr>
+                                    <td>Friday</td>
+                                    <td>Worker 2</td>
+                                    <td>South Warehouse</td>
+                                    <td>09:00</td>
+                                    <td>17:00</td>
+                                    <td><span class="badge badge-success">Yes</span></td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</body>
+</html> 
