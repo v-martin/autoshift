@@ -133,20 +133,30 @@ main() {
     ORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     print_info "Current branch: $ORIGINAL_BRANCH"
     
+    if ! git diff --quiet || ! git diff --quiet --cached; then
+        echo ""
+        print_warning "Working directory has uncommitted changes:"
+        git status --short
+        echo ""
+        print_error "Please commit or stash your changes before running this script"
+        print_info "Run: git stash"
+        exit 1
+    fi
+
     print_info "Fetching latest changes..."
     git fetch --all --quiet 2>/dev/null || git fetch --all
-    
+
     print_info "Getting list of all branches..."
     ALL_BRANCHES=$(git branch -r | grep -v '\->' | sed 's/origin\///' | sed 's/^[[:space:]]*//' | sed 's/[[:space:]]*$//' | sort -u)
-    
+
     BRANCH_COUNT=$(echo "$ALL_BRANCHES" | wc -l)
     print_success "Found $BRANCH_COUNT branches"
     echo ""
-    
+
     print_header "Branches to process"
     echo "$ALL_BRANCHES"
     echo ""
-    
+
     if [ "$AUTO_CONFIRM" = false ]; then
         print_warning "This will remove '$TARGET_PATH' from ALL branches listed above."
         if [ "$DRY_RUN" = false ]; then
@@ -156,27 +166,27 @@ main() {
         fi
         echo ""
         read -p "Do you want to continue? (yes/no): " CONFIRM
-        
+
         if [ "$CONFIRM" != "yes" ]; then
             print_info "Operation cancelled by user"
             exit 0
         fi
     fi
-    
+
     echo ""
     print_header "Processing branches"
-    
+
     PROCESSED=0
     SKIPPED=0
     ERRORS=0
-    
+
     while IFS= read -r BRANCH; do
         BRANCH=$(echo "$BRANCH" | xargs)
         [ -z "$BRANCH" ] && continue
-        
+
         echo ""
         print_info "Processing branch: $BRANCH"
-        
+
         if git checkout "$BRANCH" 2>/dev/null; then
             :
         elif git checkout -b "$BRANCH" "origin/$BRANCH" 2>/dev/null; then
@@ -186,31 +196,29 @@ main() {
             ((ERRORS++))
             continue
         fi
-        
+
         if ! git pull origin "$BRANCH" --quiet 2>/dev/null; then
             print_warning "Failed to pull branch: $BRANCH (continuing anyway)"
         fi
-        
+
         if [ ! -e "$TARGET_PATH" ]; then
             print_warning "Target '$TARGET_PATH' does not exist in branch '$BRANCH' - skipping"
             ((SKIPPED++))
             continue
         fi
-        
+
         if [ -d "$TARGET_PATH" ]; then
             print_info "Removing directory: $TARGET_PATH"
-            rm -rf "$TARGET_PATH"
+            git rm -rf "$TARGET_PATH" --quiet
         else
             print_info "Removing file: $TARGET_PATH"
-            rm -f "$TARGET_PATH"
+            git rm -f "$TARGET_PATH" --quiet
         fi
-        
-        if ! git diff --quiet || ! git diff --cached --quiet; then
-            git add -A
-            
+
+        if ! git diff --quiet --cached; then
             git commit -m "$COMMIT_MESSAGE"
             print_success "Committed changes"
-            
+
             if [ "$DRY_RUN" = false ]; then
                 if git push origin "$BRANCH"; then
                     print_success "Pushed branch: $BRANCH"
@@ -227,13 +235,13 @@ main() {
             print_warning "No changes detected (target might be already removed)"
             ((SKIPPED++))
         fi
-        
+
     done <<< "$ALL_BRANCHES"
-    
+
     echo ""
     print_info "Returning to original branch: $ORIGINAL_BRANCH"
     git checkout "$ORIGINAL_BRANCH" 2>/dev/null || true
-    
+
     echo ""
     print_header "Summary"
     echo "Total branches: $BRANCH_COUNT"
@@ -244,7 +252,7 @@ main() {
     else
         print_success "Errors: 0"
     fi
-    
+
     if [ "$DRY_RUN" = false ]; then
         echo ""
         print_success "All done! Changes have been pushed to remote repository."
@@ -255,5 +263,4 @@ main() {
 }
 
 main "$@"
-
 
