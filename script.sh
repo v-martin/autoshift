@@ -33,22 +33,12 @@ TARGET_PATH="$2"
 shift 2
 
 COMMIT_MESSAGE=""
-DRY_RUN=false
-AUTO_CONFIRM=false
 
 while [ $# -gt 0 ]; do
     case "$1" in
         -m)
             COMMIT_MESSAGE="$2"
             shift 2
-            ;;
-        -d|--dry-run)
-            DRY_RUN=true
-            shift
-            ;;
-        -y|--yes)
-            AUTO_CONFIRM=true
-            shift
             ;;
         -h|--help)
             show_usage
@@ -95,24 +85,24 @@ print_info() {
 
 validate_inputs() {
     print_header "Validating inputs"
-    
+
     if [ ! -d "$REPO_PATH" ]; then
         print_error "Repository path does not exist: $REPO_PATH"
         exit 1
     fi
-    
+
     if [ ! -d "$REPO_PATH/.git" ]; then
         print_error "Not a git repository: $REPO_PATH"
         exit 1
     fi
-    
+
     print_success "Repository path is valid: $REPO_PATH"
-    
+
     if [ -z "$TARGET_PATH" ]; then
         print_error "Target path is not specified"
         exit 1
     fi
-    
+
     print_success "Target path: $TARGET_PATH"
     echo ""
 }
@@ -120,19 +110,18 @@ validate_inputs() {
 
 main() {
     validate_inputs
-    
+
     cd "$REPO_PATH"
-    
+
     print_header "Configuration"
     echo "Repository: $REPO_PATH"
     echo "Target: $TARGET_PATH"
     echo "Commit message: $COMMIT_MESSAGE"
-    echo "Dry run: $DRY_RUN"
     echo ""
-    
+
     ORIGINAL_BRANCH=$(git rev-parse --abbrev-ref HEAD)
     print_info "Current branch: $ORIGINAL_BRANCH"
-    
+
     if ! git diff --quiet || ! git diff --quiet --cached; then
         echo ""
         print_warning "Working directory has uncommitted changes:"
@@ -157,20 +146,14 @@ main() {
     echo "$ALL_BRANCHES"
     echo ""
 
-    if [ "$AUTO_CONFIRM" = false ]; then
-        print_warning "This will remove '$TARGET_PATH' from ALL branches listed above."
-        if [ "$DRY_RUN" = false ]; then
-            print_warning "Changes WILL BE PUSHED to remote repository!"
-        else
-            print_info "Running in DRY-RUN mode (no changes will be pushed)"
-        fi
-        echo ""
-        read -p "Do you want to continue? (yes/no): " CONFIRM
+    print_warning "This will remove '$TARGET_PATH' from ALL branches listed above."
 
-        if [ "$CONFIRM" != "yes" ]; then
-            print_info "Operation cancelled by user"
-            exit 0
-        fi
+    echo ""
+    read -p "Do you want to continue? (yes/no): " CONFIRM
+
+    if [ "$CONFIRM" != "yes" ]; then
+        print_info "Operation cancelled by user"
+        exit 0
     fi
 
     echo ""
@@ -219,17 +202,12 @@ main() {
             git commit -m "$COMMIT_MESSAGE"
             print_success "Committed changes"
 
-            if [ "$DRY_RUN" = false ]; then
-                if git push origin "$BRANCH"; then
-                    print_success "Pushed branch: $BRANCH"
-                    ((PROCESSED++))
-                else
-                    print_error "Failed to push branch: $BRANCH"
-                    ((ERRORS++))
-                fi
-            else
-                print_info "[DRY-RUN] Would push branch: $BRANCH"
+            if git push origin "$BRANCH"; then
+                print_success "Pushed branch: $BRANCH"
                 ((PROCESSED++))
+            else
+                print_error "Failed to push branch: $BRANCH"
+                ((ERRORS++))
             fi
         else
             print_warning "No changes detected (target might be already removed)"
@@ -253,13 +231,9 @@ main() {
         print_success "Errors: 0"
     fi
 
-    if [ "$DRY_RUN" = false ]; then
-        echo ""
-        print_success "All done! Changes have been pushed to remote repository."
-    else
-        echo ""
-        print_info "Dry-run completed. Set DRY_RUN=false to actually push changes."
-    fi
+    echo ""
+    print_success "All done! Changes have been pushed to remote repository."
+
 }
 
 main "$@"
